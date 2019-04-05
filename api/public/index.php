@@ -9,10 +9,16 @@ echo json_encode([
 
 use Api\Http\Action;
 use Slim\App;
+use Symfony\Component\Dotenv\Dotenv;
 
-chdir(dirname(__DIR__));
+chdir(dirname(__DIR__)); // -> /var/www/rabbit.loc/api
 
 require 'vendor/autoload.php';
+
+if(file_exists('.env')) {
+    (new Dotenv())->load('.env');
+}
+
 $config = require 'config/config.php';
 
 $container = new \Slim\Container($config);
