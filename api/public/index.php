@@ -18,6 +18,6 @@ $config = require 'config/config.php';
 $container = new \Slim\Container($config);
 $app = new App($container);
 
-$app->get('/', Action\HomeAction::class);
+$app->get('/', Action\HomeAction::class . ':handle');
 
 $app->run();
