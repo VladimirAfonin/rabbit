@@ -7,7 +7,6 @@ echo json_encode([
     'version' => '1.0',
 ]);*/
 
-use Api\Http\Action;
 use Slim\App;
 use Symfony\Component\Dotenv\Dotenv;
 
@@ -23,7 +22,6 @@ $config = require 'config/config.php';
 
 $container = new \Slim\Container($config);
 $app = new App($container);
-
-$app->get('/', Action\HomeAction::class . ':handle');
+(require  'config/routes.php')($app); // передаем $app в возвращаемую функ
 
 $app->run();
