@@ -21,4 +21,14 @@ class ConfirmToken
     {
         return $this->expires <= $date;
     }
+
+    public function getToken(): string
+    {
+        return $this->token;
+    }
+
+    public function isEqualTo(string $token): bool
+    {
+        return $this->token === $token;
+    }
 }
