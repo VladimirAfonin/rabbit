@@ -1,6 +1,6 @@
 <?php
+declare(strict_types=1);
 
-use Api\Http\Action\HomeAction;
 use Doctrine\Common\Cache\FilesystemCache;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -8,20 +8,11 @@ use Doctrine\ORM\Tools\Setup;
 use Psr\Container\ContainerInterface;
 
 return [
-    'settings' => [
-        'addContentLengthHeader' => false,
-        'displayErrorDetails' => (bool)getenv('API_DEBUG'),
-    ],
-
-    HomeAction::class => function() {
-        return new HomeAction();
-    },
-
-    EntityManagerInterface::class => function(ContainerInterface $container) {
+    EntityManagerInterface::class => function (ContainerInterface $container) {
         $params = $container['config']['doctrine'];
-        $config  = Setup::createAnnotationMetadataConfiguration(
+        $config = Setup::createAnnotationMetadataConfiguration(
             $params['metadata_dirs'],
-            $params['dev_model'],
+            $params['dev_mode'],
             $params['cache_dir'],
             new FilesystemCache(
                 $params['cache_dir']
@@ -33,7 +24,6 @@ return [
             $config
         );
     },
-
     'config' => [
         'doctrine' => [
             'dev_mode' => true,
@@ -44,5 +34,4 @@ return [
             ],
         ],
     ],
-
 ];
