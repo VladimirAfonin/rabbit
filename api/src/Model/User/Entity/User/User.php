@@ -36,14 +36,17 @@ class User
     {
         return $this->status === self::STATUS_WAIT;
     }
+
     public function isActive(): bool
     {
         return $this->status === self::STATUS_ACTIVE;
     }
+
     public function getId(): UserId
     {
         return $this->id;
     }
+
     public function getDate(): \DateTimeImmutable
     {
         return $this->date;
@@ -52,10 +55,12 @@ class User
     {
         return $this->email;
     }
+
     public function getPasswordHash(): string
     {
         return $this->passwordHash;
     }
+
     public function getConfirmToken(): ?ConfirmToken
     {
         return $this->confirmToken;
