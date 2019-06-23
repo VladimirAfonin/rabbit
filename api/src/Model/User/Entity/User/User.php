@@ -3,17 +3,43 @@ declare(strict_types=1);
 
 namespace Api\Model\User\Entity\User;
 
-
+use Doctrine\ORM\Mapping as ORM;
+/**
+ * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
+ * @ORM\Table(name="user_users", uniqueConstraints={
+ *     @ORM\UniqueConstraint(columns={"email"})
+ * })
+ */
 class User
 {
     private const STATUS_WAIT = 'wait';
     private const STATUS_ACTIVE = 'active';
-
+    /**
+     * @ORM\Column(type="user_user_id")
+     * @ORM\Id
+     */
     private $id;
+    /**
+     * @ORM\Column(type="datetime_immutable")
+     */
     private $date;
+    /**
+     * @ORM\Column(type="user_user_email")
+     */
     private $email;
+    /**
+     * @ORM\Column(type="string", name="password_hash")
+     */
     private $passwordHash;
+    /**
+     * @var ConfirmToken
+     * @ORM\Embedded(class="ConfirmToken", columnPrefix="confirm_token_")
+     */
     private $confirmToken;
+    /**
+     * @ORM\Column(type="string", length=16)
+     */
     private $status;
 
     public function __construct(
@@ -31,7 +57,15 @@ class User
         $this->confirmToken = $confirmToken;
         $this->status = self::STATUS_WAIT;
     }
-
+    public function confirmSignup(string $token, \DateTimeImmutable $date): void
+    {
+        if ($this->isActive()) {
+            throw new \DomainException('User is already active.');
+        }
+        $this->confirmToken->validate($token, $date);
+        $this->status = self::STATUS_ACTIVE;
+        $this->confirmToken = null;
+    }
     public function isWait(): bool
     {
         return $this->status === self::STATUS_WAIT;
@@ -51,6 +85,7 @@ class User
     {
         return $this->date;
     }
+
     public function getEmail(): Email
     {
         return $this->email;
@@ -65,19 +100,13 @@ class User
     {
         return $this->confirmToken;
     }
-
-    public function confirmSignup(string $token, \DateTimeImmutable $date): void
+    /**
+     * @ORM\PostLoad()
+     */
+    public function checkEmbeds(): void
     {
-        if ($this->isActive()) {
-            throw new \DomainException('User is already active.');
+        if ($this->confirmToken->isEmpty()) {
+            $this->confirmToken = null;
         }
-        if (!$this->confirmToken->isEqualTo($token)) {
-            throw new \DomainException('Confirm token is invalid.');
-        }
-        if ($this->confirmToken->isExpiredTo($date)) {
-            throw new \DomainException('Confirm token is expired.');
-        }
-        $this->status = self::STATUS_ACTIVE;
-        $this->confirmToken = null;
     }
 }
