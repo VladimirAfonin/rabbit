@@ -6,6 +6,8 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Setup;
 use Psr\Container\ContainerInterface;
+use Doctrine\DBAL;
+use Api\Infrastructure\Doctrine\Type;
 
 return [
     EntityManagerInterface::class => function (ContainerInterface $container) {
@@ -19,6 +21,11 @@ return [
             ),
             false
         );
+        foreach ($params['types'] as $type => $class) {
+            if (!DBAL\Types\Type::hasType($type)) {
+                DBAL\Types\Type::addType($type, $class);
+            }
+        }
         return EntityManager::create(
             $params['connection'],
             $config
@@ -31,6 +38,10 @@ return [
             'metadata_dirs' => ['src/Model/User/Entity'],
             'connection' => [
                 'url' => getenv('API_DB_URL'),
+            ],
+            'types' => [
+                Type\User\UserIdType::NAME => Type\User\UserIdType::class,
+                Type\User\EmailType::NAME => Type\User\EmailType::class,
             ],
         ],
     ],
