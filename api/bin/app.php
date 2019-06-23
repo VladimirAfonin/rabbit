@@ -5,6 +5,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Dotenv\Dotenv;
+use Doctrine\Migrations\Tools\Console\Helper\ConfigurationHelper;
+use Doctrine\Migrations\Configuration\Configuration;
+use Doctrine\ORM\Tools\Console\ConsoleRunner as OrmConsoleRunner;
+use Doctrine\DBAL\Tools\Console\ConsoleRunner;
 
 chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
@@ -19,9 +23,17 @@ $container = require 'config/container.php';
 $cli = new Application('Application console');
 
 $entityManager = $container->get(EntityManagerInterface::class);
-$cli->getHelperSet()->set(new EntityManagerHelper($entityManager), 'em');
+$connection = $entityManager->getConnection();
 
-Doctrine\ORM\Tools\Console\ConsoleRunner::addCommands($cli);
+$configuration = new Configuration($connection);
+$configuration->setMigrationsDirectory('src/Data/Migration');
+$configuration->setMigrationsNamespace('Api\Data\Migration');
+
+$cli->getHelperSet()->set(new EntityManagerHelper($entityManager), 'em');
+$cli->getHelperSet()->set(new ConfigurationHelper($connection, $configuration), 'configuration');
+
+OrmConsoleRunner::addCommands($cli);
+ConsoleRunner::addCommands($cli);
 
 $commands = $container->get('config')['console']['commands'];
 foreach ($commands as $command) {

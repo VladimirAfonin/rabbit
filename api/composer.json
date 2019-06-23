@@ -5,6 +5,7 @@
   "require": {
     "php": ">=7.1.0",
     "ext-json": "^1.5",
+    "doctrine/migrations": "^2.1",
     "doctrine/orm": "^2.6",
     "ramsey/uuid": "^3.8",
     "slim/slim": "^3.12",
@@ -28,6 +29,7 @@
     }
   },
   "scripts" : {
+    "app": "php bin/app.php --ansi",
     "test": "phpunit --colors=always"
   }
 }
