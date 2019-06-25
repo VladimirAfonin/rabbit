@@ -6,4 +6,5 @@ use Api\Http\Action\HomeAction;
 
 return function (App $app) {
     $app->get('/', HomeAction::class . ':handle');
+    $app->post('/auth/signup', Action\Auth\SignUp\RequestAction::class . ':handle');
 };
