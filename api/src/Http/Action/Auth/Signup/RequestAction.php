@@ -9,11 +9,11 @@ use Api\Http\Validator\Validator;
 use Api\Model\User\UseCase\SignUp\Request\Handler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
+//use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Diactoros\Response\JsonResponse;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class RequestAction implements RequestHandlerInterface
+class RequestAction
 {
     private $handler;
     private $validator;
@@ -26,10 +26,7 @@ class RequestAction implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $body = $request->getParsedBody();
-        $command = new Command();
-        $command->email = $body['email'] ?? '';
-        $command->password = $body['password'] ?? '';
+        $command = $this->deserialize($request);
 
         if ($errors = $this->validator->validate($command)) {
             throw new ValidationException($errors);
@@ -40,5 +37,14 @@ class RequestAction implements RequestHandlerInterface
         return new JsonResponse([
             'email' => $command->email,
         ], 201);
+    }
+
+    private function deserialize(ServerRequestInterface $request): Command
+    {
+        $body = $request->getParsedBody();
+        $command = new Command();
+        $command->email = $body['email'] ?? '';
+        $command->password = $body['password'] ?? '';
+        return $command;
     }
 }

@@ -4,12 +4,12 @@ namespace Api\Http\Middleware;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
+//use Psr\Http\Server\MiddlewareInterface;
+//use Psr\Http\Server\RequestHandlerInterface;
 
-class BodyParamsMiddleware implements MiddlewareInterface
+class BodyParamsMiddleware
 {
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    public function process(ServerRequestInterface $request,  $handler): ResponseInterface
     {
         $contentType = $request->getHeaderLine('Content-Type');
         $parts = explode(';', $contentType);
