@@ -8,12 +8,12 @@ use Api\Http\Validator\Validator;
 use Api\Model\User\UseCase\SignUp\Confirm\Handler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
+//use Psr\Http\Server\RequestHandlerInterface;
 use Api\Http\ValidationException;
 use Zend\Diactoros\Response\JsonResponse;
 //use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class ConfirmAction implements RequestHandlerInterface
+class ConfirmAction
 {
     private $handler;
     private $validator;
@@ -26,7 +26,7 @@ class ConfirmAction implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $body = json_decode($request->getBody()->getContents(), true);
+        $body = $request->getParsedBody();
         $command = new Command();
         $command->email = $body['email'] ?? '';
         $command->token = $body['token'] ?? '';

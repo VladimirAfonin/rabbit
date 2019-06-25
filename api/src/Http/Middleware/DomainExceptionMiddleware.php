@@ -5,13 +5,13 @@ namespace Api\Http\Middleware;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
+//use Psr\Http\Server\MiddlewareInterface;
+//use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Diactoros\Response\JsonResponse;
 
-class DomainExceptionMiddleware implements MiddlewareInterface
+class DomainExceptionMiddleware
 {
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    public function process(ServerRequestInterface $request, $handler): ResponseInterface
     {
         try {
             return $handler->handle($request);
@@ -21,3 +21,4 @@ class DomainExceptionMiddleware implements MiddlewareInterface
             ], 400);
         }
     }
+}
