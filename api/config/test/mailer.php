@@ -12,6 +12,7 @@ return [
         );
         return new Swift_Mailer($transport);
     },
+
     'config' => [
         'mailer' => [
             'local_path' => 'var/mail',
