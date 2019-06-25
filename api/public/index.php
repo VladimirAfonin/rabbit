@@ -22,6 +22,6 @@ if(file_exists('.env')) {
     $container = require 'config/container.php';
     $app = new App($container);
 
-    (require  'config/routes.php')($app); // передаем $app в возвращаемую функ
+    (require 'config/routes.php')($app, $container); // передаем $app в возвращаемую функ
     $app->run();
 })();

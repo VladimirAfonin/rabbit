@@ -4,8 +4,13 @@ declare(strict_types=1);
 use Api\Http\Action;
 use Api\Model;
 use Psr\Container\ContainerInterface;
+use Api\Http\Middleware;
 
 return [
+    Middleware\DomainExceptionMiddleware::class => function () {
+        return new Middleware\DomainExceptionMiddleware();
+    },
+
     Action\HomeAction::class => function () {
         return new Action\HomeAction();
     },
