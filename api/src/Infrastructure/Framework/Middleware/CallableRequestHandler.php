@@ -5,9 +5,9 @@ namespace Api\Infrastructure\Framework\Middleware;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
+//use Psr\Http\Server\RequestHandlerInterface;
 
-class CallableRequestHandler implements RequestHandlerInterface
+class CallableRequestHandler
 {
     private $callable;
     private $response;

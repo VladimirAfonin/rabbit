@@ -43,7 +43,6 @@ services:
           - mailer
         working_dir: /var/www/api
         tty: true
-
     api-postgres:
           image: postgres:9.6-alpine
           volumes:
@@ -55,8 +54,8 @@ services:
           ports:
               - "54321:5432"
     mailer:
-            image: mailhog/mailhog
-            restart: unless-stopped
-            ports:
-                - "1025:1025"
-                - "8082:8025"
+          image: mailhog/mailhog
+          restart: unless-stopped
+          ports:
+              - "1025:1025"
+              - "8082:8025"
