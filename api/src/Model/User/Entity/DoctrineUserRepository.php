@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Api\Infrastructure\Model\User\Entity;
+namespace Api\Model\User\Entity;
 
 use Api\Model\EntityNotFoundException;
 use Api\Model\User\Entity\User\Email;

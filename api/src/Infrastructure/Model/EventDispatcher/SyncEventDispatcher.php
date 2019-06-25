@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Api\Infrastructure\Model\EventDispatcher;
 
-use Api\Model\EventDispatcher;
+use Api\Infrastructure\Model\EventDispatcher\EventDispatcher;
 use Psr\Container\ContainerInterface;
 
 class SyncEventDispatcher implements EventDispatcher

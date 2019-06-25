@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Api\Infrastructure\Model\Service;
+namespace Api\Model\Service;
 
 use Api\Model\AggregateRoot;
 use Api\Model\EventDispatcher;
@@ -13,7 +13,7 @@ class DoctrineFlusher implements Flusher
     private $em;
     private $dispatcher;
 
-    public function __construct(EntityManagerInterface $em, EventDispatcher $dispatcher)
+    public function __construct($em, $dispatcher)
     {
         $this->em = $em;
         $this->dispatcher = $dispatcher;

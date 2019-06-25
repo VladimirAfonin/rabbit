@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Api\Infrastructure\Model\User\Service;
+namespace Api\Model\User\Service;
 
 use Api\Model\User\Entity\User\ConfirmToken;
 use Api\Model\User\Service\ConfirmTokenizer;

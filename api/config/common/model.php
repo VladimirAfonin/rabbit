@@ -5,29 +5,33 @@ use Api\Infrastructure\Model\User as UserInfrastructure;
 use Api\Model\User as UserModel;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Container\ContainerInterface;
+use Api\Model\User\Entity\DoctrineUserRepository;
+use Api\Model\User\Service\BCryptPasswordHasher;
+use Api\Model\User\Service\RandConfirmTokenizer;
+use Api\Model\Service\DoctrineFlusher;
 
 return [
     Api\Model\Flusher::class => function (ContainerInterface $container) {
-        return new Api\Infrastructure\Model\Service\DoctrineFlusher(
+        return new DoctrineFlusher(
             $container->get(EntityManagerInterface::class),
             $container->get(Api\Model\EventDispatcher::class)
         );
     },
     UserModel\Service\PasswordHasher::class => function () {
-        return new UserInfrastructure\Service\BCryptPasswordHasher();
+        return new BCryptPasswordHasher();
     },
     UserModel\Entity\User\UserRepository::class => function (ContainerInterface $container) {
-        return new UserInfrastructure\Entity\DoctrineUserRepository(
+        return new DoctrineUserRepository(
             $container->get(EntityManagerInterface::class)
         );
     },
     UserModel\Service\ConfirmTokenizer::class => function (ContainerInterface $container) {
         $interval = $container->get('config')['auth']['signup_confirm_interval'];
-        return new UserInfrastructure\Service\RandConfirmTokenizer(new \DateInterval($interval));
+        return new RandConfirmTokenizer(new \DateInterval($interval));
     },
 
     UserModel\Entity\User\UserRepository::class => function (ContainerInterface $container) {
-        return new UserInfrastructure\Entity\DoctrineUserRepository(
+        return new DoctrineUserRepository(
             $container->get(\Doctrine\ORM\EntityManagerInterface::class)
         );
     },

@@ -6,7 +6,7 @@ namespace Api\Infrastructure\Framework\Middleware;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
+//use Psr\Http\Server\MiddlewareInterface;
 
 class CallableMiddlewareAdapter
 {
@@ -21,7 +21,7 @@ class CallableMiddlewareAdapter
 
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next): ResponseInterface
     {
-        /** @var MiddlewareInterface $middleware */
+
         $middleware = $this->container->get($this->middleware);
         return $middleware->process(
             $request,
