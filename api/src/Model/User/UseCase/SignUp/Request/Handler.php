@@ -2,6 +2,7 @@
 
 namespace Api\Model\User\UseCase\SignUp\Request;
 
+use Api\Model\EventDispatcher;
 use Api\Model\User\Entity\User\Email;
 use Api\Model\User\Entity\User\User;
 use Api\Model\User\Entity\User\UserId;
@@ -17,18 +18,21 @@ class Handler
     private $hasher;
     private $tokenizer;
     private $flusher;
+    private $dispatcher;
 
     public function __construct(
         UserRepository $users,
         PasswordHasher $hasher,
         ConfirmTokenizer $tokenizer,
-        Flusher $flusher
+        Flusher $flusher,
+        EventDispatcher $dispatcher
     )
     {
         $this->users = $users;
         $this->hasher = $hasher;
         $this->tokenizer = $tokenizer;
         $this->flusher = $flusher;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -53,5 +57,7 @@ class Handler
 
         $this->users->add($user);
         $this->flusher->flush();
+        $this->dispatcher->dispatch(...$user->releaseEvents());
+
     }
 }
