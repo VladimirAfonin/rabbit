@@ -3,8 +3,7 @@ declare(strict_types=1);
 
 namespace Api\Model\User\UseCase\SignUp\Confirm;
 
-use Api\Model\EventDispatcher;
-use App\Model\Flusher;
+use Api\Model\Flusher;
 use Api\Model\User\Entity\User\Email;
 use Api\Model\User\Entity\User\UserRepository;
 
@@ -14,11 +13,10 @@ class Handler
     private $flusher;
     private $dispatcher;
 
-    public function __construct(UserRepository $users, Flusher $flusher, EventDispatcher $dispatcher)
+    public function __construct(UserRepository $users, Flusher $flusher)
     {
         $this->users = $users;
         $this->flusher = $flusher;
-        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -30,6 +28,5 @@ class Handler
         $user = $this->users->getByEmail(new Email($command->email));
         $user->confirmSignup($command->token, new \DateTimeImmutable());
         $this->flusher->flush();
-        $this->dispatcher->dispatch(...$user->releaseEvents());
     }
 }
