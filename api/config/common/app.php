@@ -9,6 +9,7 @@ use Doctrine\Common\Annotations\AnnotationRegistry;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Api\Http\Validator\Validator;
+use Psr\Log\LoggerInterface;
 
 return [
     ValidatorInterface::class => function () {
@@ -52,6 +53,13 @@ return [
         return new Action\Auth\SignUp\ConfirmAction(
             $container->get(Model\User\UseCase\SignUp\Confirm\Handler::class),
             $container->get(Validator::class)
+        );
+    },
+
+    Action\Auth\OAuthAction::class => function (ContainerInterface $container) {
+        return new Action\Auth\OAuthAction(
+            $container->get(\League\OAuth2\Server\AuthorizationServer::class),
+            $container->get(LoggerInterface::class)
         );
     },
 ];
