@@ -10,6 +10,7 @@ use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Api\Http\Validator\Validator;
 use Psr\Log\LoggerInterface;
+use Api\ReadModel;
 
 return [
     ValidatorInterface::class => function () {
@@ -60,6 +61,12 @@ return [
         return new Action\Auth\OAuthAction(
             $container->get(\League\OAuth2\Server\AuthorizationServer::class),
             $container->get(LoggerInterface::class)
+        );
+    },
+
+    Action\Profile\ShowAction::class => function (ContainerInterface $container) {
+        return new Action\Profile\ShowAction(
+            $container->get(ReadModel\User\UserReadRepository::class)
         );
     },
 ];

@@ -9,6 +9,8 @@ use Api\Model\User\Entity\DoctrineUserRepository;
 use Api\Model\User\Service\BCryptPasswordHasher;
 use Api\Model\User\Service\RandConfirmTokenizer;
 use Api\Model\Service\DoctrineFlusher;
+use Api\Infrastructure;
+use Api\ReadModel;
 
 return [
     Api\Model\Flusher::class => function (ContainerInterface $container) {
@@ -50,6 +52,13 @@ return [
             $container->get(Api\Model\Flusher::class)
         );
     },
+
+    ReadModel\User\UserReadRepository::class => function (ContainerInterface $container) {
+        return new Infrastructure\ReadModel\User\DoctrineUserReadRepository(
+            $container->get(\Doctrine\ORM\EntityManagerInterface::class)
+        );
+    },
+
 
     'config' => [
         'auth' => [
