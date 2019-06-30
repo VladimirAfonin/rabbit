@@ -59,6 +59,12 @@ return [
         );
     },
 
+    ReadModel\Video\AuthorReadRepository::class => function (ContainerInterface $container) {
+        return new Infrastructure\ReadModel\Video\DoctrineAuthorReadRepository(
+            $container->get(\Doctrine\ORM\EntityManagerInterface::class)
+        );
+    },
+
 
     'config' => [
         'auth' => [
