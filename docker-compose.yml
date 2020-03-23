@@ -21,8 +21,10 @@ services:
           dockerfile: nginx.docker
         volumes:
           - ./api:/var/www/api
+          - ./api/docker/nginx/ssl:/etc/nginx/ssl
         ports:
           - "8081:80"
+
     api-php-fpm:
         build:
           context: ./api/docker
@@ -53,9 +55,50 @@ services:
               - "POSTGRES_DB=api"
           ports:
               - "54321:5432"
+
+    mysql:
+        image: mysql:5.7
+        volumes:
+          - ./api/var/docker/mysql:/var/lib/mysql
+        environment:
+          - "MYSQL_ROOT_PASSWORD=secret"
+          - "MYSQL_USER=api"
+          - "MYSQL_PASSWORD=secret"
+          - "MYSQL_DATABASE=app"
+        ports:
+          - "33061:3306"
+
+    redis:
+      image: redis:3.0
+      ports:
+        - "63791:6379"
+
     mailer:
           image: mailhog/mailhog
           restart: unless-stopped
           ports:
               - "1025:1025"
               - "8082:8025"
+    zookeeper:
+        image: wurstmeister/zookeeper
+        ports:
+          - "2181:2181"
+    kafka:
+      image: wurstmeister/kafka
+      ports:
+        - "9092:9092"
+      depends_on:
+        - zookeeper
+      environment:
+        KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+        KAFKA_CREATE_TOPICS: notifications:1:1
+        KAFKA_LISTENERS: PLAINTEXT:/kafka:9092
+
+    websocket-nodejs:
+      image: node:10.11-jessie
+      volumes:
+        - ./websocket:/var/www/websocket
+      ports:
+        - "8084:8000"
+      working_dir: /var/www/websocket
+      tty: true
