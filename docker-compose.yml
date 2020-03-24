@@ -8,6 +8,8 @@ services:
             - ./frontend:/var/www/frontend
         ports:
             - "8080:80"
+        depends_on:
+          - api-php-fpm
     frontend-nodejs:
         image: node:10.11-jessie
         volumes:
@@ -34,6 +36,8 @@ services:
         depends_on:
           - api-postgres
           - mailer
+          - rabbitmq
+          - kafka
     api-php-cli:
         build:
           context: ./api/docker
@@ -43,6 +47,8 @@ services:
         depends_on:
           - api-postgres
           - mailer
+          - rabbitmq
+          - kafka
         working_dir: /var/www/api
         tty: true
     api-postgres:
@@ -102,3 +108,15 @@ services:
         - "8084:8000"
       working_dir: /var/www/websocket
       tty: true
+
+    rabbitmq:
+      image: rabbitmq:3-management
+      environment:
+        RABBITMQ_ERLANG_COOKIE: ASDFSDFSAFSDFAS
+        RABBITMQ_DEFAULT_USER: rabbit
+        RABBITMQ_DEFAULT_PASS: rabbit
+      ports:
+        - "8085:15672"
+        - "5672:5672"
+      volumes:
+        - ./rabbitmq/docker/enabled_plugins:/etc/rabbitmq/enabled_plugins
